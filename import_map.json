@@ -2,6 +2,7 @@
   "imports": {
     "@oak": "https://deno.land/x/oak/mod.ts",
     "@std/": "https://deno.land/std/",
-    "@lib/": "./src/lib/"
+    "@lib/": "./src/lib/",
+    "@utils/": "./src/utils/"
   }
 }
