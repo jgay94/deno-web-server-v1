@@ -9,6 +9,9 @@ export class Server implements IServer {
   private name: string;
   private port: number;
 
+  private id: string; // temp
+  private isClosing = false; // temp
+
   constructor({
     configuration: {
       app: {
@@ -23,6 +26,8 @@ export class Server implements IServer {
     this.name = name;
     this.port = port;
 
+    this.id = Math.random().toString(36).substring(2, 15); // Generate a unique ID
+
     setupLogger(logLevel);
   }
 
@@ -33,10 +38,17 @@ export class Server implements IServer {
   }
 
   public close(reason?: DOMException): void {
+    if (this.isClosing) {
+      console.log(`[${this.id}]: Already closing, skipping...`);
+      return;
+    }
+
+    this.isClosing = true;
     this.abortController.abort();
+
     if (reason) {
       log.warning(
-        `🔌 ${this.name} is shutting down: ${reason.message} (${reason.name})...`,
+        `🔌 [${this.id}] ${this.name} is shutting down: ${reason.message} (${reason.name})...`,
       );
     } else {
       log.warning(`🔌 ${this.name} is shutting down...`);
@@ -79,8 +91,10 @@ export class Server implements IServer {
         "Server shutting down gracefully",
         "OperationError",
       );
+      console.log(`[addUnloadListener()]: ${this.id} Handling unload event`);
       this.close(reason);
     });
+    console.log(`[addUnloadListener()]: ${this.id} Registered unload event listener`);
   }
 
   private async serve(): Promise<void> {
