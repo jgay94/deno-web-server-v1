@@ -1,7 +1,7 @@
-import { config as dotenv } from "@std/dotenv/mod.ts";
+import { load } from "@std/dotenv/mod.ts";
 import { Configuration, Environment, LogLevel } from "@utils/typings.d.ts";
 
-const env = await dotenv({ safe: true });
+const env = await load();
 
 export const config: Configuration = {
   app: {
